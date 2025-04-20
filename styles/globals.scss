@@ -87,7 +87,7 @@ main {
   background-size: cover;
 }
 
-@for $index from 0 through 5 {
+@for $index from 0 through 6 {
   .progress-#{$index} {
     [class^="phase-"] {
       display: none;

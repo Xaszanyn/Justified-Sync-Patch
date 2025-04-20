@@ -4,6 +4,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updatePassword,
 } from "firebase/auth";
 
 import {
@@ -35,9 +36,18 @@ function set(document, id, value) {
   return setDoc(doc(database, document, id), value);
 }
 
+function get(document, id) {
+  return getDoc(doc(database, document, id)).then((snapshot) => ({
+    id,
+    ...snapshot.data(),
+  }));
+}
+
 //* User ====================================================================================================
 
 export function register(email, password, nick) {
+  localStorage.setItem("unsafeemail", email);
+  localStorage.setItem("unsafepw", password);
   return createUserWithEmailAndPassword(auth, email, password).then(
     (response) =>
       set("users", response.user.uid, { email, nick }).then(() => ({
@@ -46,4 +56,16 @@ export function register(email, password, nick) {
         nick,
       }))
   );
+}
+
+export function login(email, password) {
+  localStorage.setItem("unsafeemail", email);
+  localStorage.setItem("unsafepw", password);
+  return signInWithEmailAndPassword(auth, email, password).then((credendials) =>
+    get("users", credendials.user.uid)
+  );
+}
+
+export function changePassword(password) {
+  return updatePassword(auth.currentUser, password);
 }

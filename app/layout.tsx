@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "@/styles/globals.scss";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import AutoLogin from "@/components/AutoLogin";
 
 //* Declaration is enough for importing from SCSS.
 const dmSans = DM_Sans({
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body data-bs-theme="light">
+        <AutoLogin />
         <Nav />
         {children}
         <Footer />

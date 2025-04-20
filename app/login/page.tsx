@@ -6,12 +6,36 @@ import Image from "next/image";
 import Marquee from "@/components/Marquee";
 import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
-
+import { useRef } from "react";
 import imageLogin from "@/images/login.png";
 import imageLogin2 from "@/images/login2.png";
+import { login as loginFirebase } from "@/services/firebase";
 //* Import images due to desperate measures.
+import useCryptoStore from "@/store/cryptoStore";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const cryptoStore = useCryptoStore();
+  const router = useRouter();
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  function login() {
+    if (!emailRef.current?.value || !passwordRef.current?.value) {
+      alert("Please fill in all the fields.");
+      return;
+    }
+
+    loginFirebase(emailRef.current.value, passwordRef.current.value)
+      .then((user) => {
+        localStorage.setItem("user", JSON.stringify(user));
+        cryptoStore.set({ user });
+        router.push("/user");
+      })
+      .catch(() => alert("Something went wrong, please try again."));
+  }
+
   return (
     <main>
       <Breadcrumb title="Login" />
@@ -34,6 +58,7 @@ export default function Login() {
                 Email/ID
               </label>
               <input
+                ref={emailRef}
                 type="text"
                 className="form-control"
                 id="email"
@@ -48,6 +73,7 @@ export default function Login() {
                 Password
               </label>
               <input
+                ref={passwordRef}
                 type="password"
                 className="form-control mb-2 py-2"
                 id="password"
@@ -69,7 +95,9 @@ export default function Login() {
                 <span className="text-danger">Forgot Password?</span>
               </label>
             </div>
-            <Button className="w-100">Login</Button>
+            <Button className="w-100" onClick={login}>
+              Login
+            </Button>
             <div className="center py-4 mb-5">
               <span>
                 Not A Member?{" "}

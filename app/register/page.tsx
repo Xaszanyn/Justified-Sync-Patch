@@ -8,10 +8,10 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
 import { register as registerFirebase } from "@/services/firebase";
 import imageRegister from "@/images/register.png";
+//* Import images due to desperate measures.
 import { useRef } from "react";
 import useCryptoStore from "@/store/cryptoStore";
 import { useRouter } from "next/navigation";
-//* Import images due to desperate measures.
 
 export default function Register() {
   const cryptoStore = useCryptoStore();
