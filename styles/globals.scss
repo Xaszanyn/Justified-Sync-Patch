@@ -86,3 +86,14 @@ main {
   background-position: center;
   background-size: cover;
 }
+
+@for $index from 0 through 5 {
+  .progress-#{$index} {
+    [class^="phase-"] {
+      display: none;
+    }
+    .phase-#{$index} {
+      display: block;
+    }
+  }
+}

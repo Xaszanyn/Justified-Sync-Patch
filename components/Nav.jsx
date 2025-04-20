@@ -41,7 +41,12 @@ export default function Nav() {
               <ul className="dropdown-menu"></ul>
             </li>
             <li className="nav-item fw-semibold">
-              <Link className="nav-link center px-3" href="/DDDDDDDDDD">
+              <Link
+                className={`nav-link center px-3 ${
+                  pathname == "/buy-crypto" ? "active" : ""
+                }`}
+                href="/buy-crypto"
+              >
                 Buy Crypto
               </Link>
             </li>

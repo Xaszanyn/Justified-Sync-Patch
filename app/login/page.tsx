@@ -11,7 +11,7 @@ import imageLogin from "@/images/login.png";
 import imageLogin2 from "@/images/login2.png";
 //* Import images due to desperate measures.
 
-export default function Register() {
+export default function Login() {
   return (
     <main>
       <Breadcrumb title="Login" />
