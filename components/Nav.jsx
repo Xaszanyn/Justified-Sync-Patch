@@ -3,11 +3,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import useCryptoStore from "@/store/cryptoStore";
 
 import "@/styles/nav.scss";
+import { useState, useEffect } from "react";
+
+//TODO BASE URL | https://translate.google.com/translate?hl=tr&sl=auto&u=https://example.com
+//TODO SUPRESS IFRAME
+//TODO PASS UID?
 
 export default function Nav() {
   const pathname = usePathname();
+  const cryptoStore = useCryptoStore();
+
+  const [mode, setMode] = useState();
+
+  useEffect(() => {
+    setMode(localStorage.getItem("mode") != "dark" ? "light" : "dark");
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("mode", mode);
+    document.body.dataset.bsTheme = mode;
+  }, [mode]);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-white p-0">
@@ -111,6 +129,96 @@ export default function Nav() {
                 </li>
               </ul>
             </li>
+          </ul>
+          <ul className="navbar-nav mb-2 mb-lg-0 h-100">
+            <li
+              className="nav-item fw-semibold center"
+              style={{ cursor: "pointer" }}
+              onClick={() =>
+                mode != "dark" ? setMode("dark") : setMode("light")
+              }
+            >
+              {mode != "dark" ? (
+                <i className="fa-solid fa-moon" aria-hidden="true"></i>
+              ) : (
+                <i className="fa-solid fa-sun" aria-hidden="true"></i>
+              )}
+            </li>
+            <li className="nav-item fw-semibold dropdown">
+              <a
+                className="nav-link center px-3 dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i className="fa-solid fa-language" aria-hidden="true"></i>
+              </a>
+              <ul className="dropdown-menu">
+                <li>
+                  <Link className="dropdown-item" href="/">
+                    English
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" href="/">
+                    Turkish
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" href="/">
+                    Russian
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            {cryptoStore.uid ? (
+              <>
+                <li className="nav-item fw-semibold">
+                  <Link
+                    className={`nav-link center px-3 ${
+                      pathname == "/wallet" ? "active" : ""
+                    }`}
+                    href="/wallet"
+                  >
+                    Wallet
+                  </Link>
+                </li>
+                <li className="nav-item fw-semibold">
+                  <Link
+                    className={`nav-link center px-3 ${
+                      pathname == "/user" ? "active" : ""
+                    }`}
+                    href="/user"
+                  >
+                    <i className="fa-solid fa-user" aria-hidden="true"></i>
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item fw-semibold">
+                  <Link
+                    className={`nav-link center px-3 ${
+                      pathname == "/login" ? "active" : ""
+                    }`}
+                    href="/login"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li className="nav-item fw-semibold">
+                  <Link
+                    className={`nav-link center px-3 ${
+                      pathname == "/register" ? "active" : ""
+                    }`}
+                    href="/register"
+                  >
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
