@@ -6,11 +6,52 @@ import Image from "next/image";
 import Marquee from "@/components/Marquee";
 import Breadcrumb from "@/components/Breadcrumb";
 import Link from "next/link";
-
+import { register as registerFirebase } from "@/services/firebase";
 import imageRegister from "@/images/register.png";
+import { useRef } from "react";
+import useCryptoStore from "@/store/cryptoStore";
+import { useRouter } from "next/navigation";
 //* Import images due to desperate measures.
 
 export default function Register() {
+  const cryptoStore = useCryptoStore();
+  const router = useRouter();
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const password2Ref = useRef<HTMLInputElement>(null);
+  const nickRef = useRef<HTMLInputElement>(null);
+
+  function register() {
+    if (
+      !emailRef.current?.value ||
+      !passwordRef.current?.value ||
+      !password2Ref.current?.value ||
+      !nickRef.current?.value
+    ) {
+      alert("Please fill in all the fields.");
+      return;
+    }
+    if (passwordRef.current!.value != password2Ref.current!.value) {
+      alert("Password do not match.");
+      return;
+    }
+    if (passwordRef.current!.value.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    registerFirebase(
+      emailRef.current.value,
+      passwordRef.current.value,
+      nickRef.current.value
+    ).then((user) => {
+      localStorage.setItem("user", JSON.stringify(user));
+      cryptoStore.set({ user });
+      router.push("/user");
+    });
+  }
+
   return (
     <main>
       <Breadcrumb title="Register" />
@@ -39,6 +80,7 @@ export default function Register() {
               </label>
               <div className="input-group">
                 <input
+                  ref={emailRef}
                   type="text"
                   className="form-control"
                   id="email"
@@ -57,12 +99,14 @@ export default function Register() {
                 Password
               </label>
               <input
+                ref={passwordRef}
                 type="password"
                 className="form-control mb-2 py-2"
                 id="password"
                 placeholder="Please enter a password."
               />
               <input
+                ref={password2Ref}
                 type="password"
                 className="form-control py-2"
                 id="password2"
@@ -77,6 +121,7 @@ export default function Register() {
                 NickName
               </label>
               <input
+                ref={nickRef}
                 type="text"
                 className="form-control mb-2 py-2"
                 id="nick"
@@ -97,7 +142,7 @@ export default function Register() {
                 defaultValue="0"
               >
                 <option value="0">Turkey (+90)</option>
-                <option value="1">Galatic Federation (+👽☎)</option>
+                <option value="1">Galactic Federation (+👽☎)</option>
                 <option value="1">Other</option>
               </select>
             </div>
@@ -116,7 +161,9 @@ export default function Register() {
                 disabled
               />
             </div>
-            <Button className="w-100">Pre-Registration</Button>
+            <Button className="w-100" onClick={register}>
+              Pre-Registration
+            </Button>
             <div className="center py-4 mb-5">
               <span>
                 Already Have An Account?{" "}

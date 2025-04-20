@@ -172,7 +172,7 @@ export default function Nav() {
                 </li>
               </ul>
             </li>
-            {cryptoStore.uid ? (
+            {cryptoStore.user ? (
               <>
                 <li className="nav-item fw-semibold">
                   <Link
