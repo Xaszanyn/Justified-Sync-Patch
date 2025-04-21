@@ -29,7 +29,11 @@ export default function Buy() {
         <div className="row py-5">
           <div className="col-3 pe-5">
             <div className="mb-1">
-              <Button variant="white">
+              <Button
+                variant="white"
+                className="py-2 w-100 text-start"
+                onClick={() => router.push("/wallet")}
+              >
                 <span className="text-black fw-semibold">Overview</span>
               </Button>
             </div>

@@ -13,13 +13,37 @@ import imageSell3 from "@/images/sell3.png";
 import imageSell4 from "@/images/sell4.png";
 import imageSell5 from "@/images/sell5.png";
 import imageSell6 from "@/images/sell6.png";
+import imageSell7 from "@/images/sell7.png";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CurrencySwap from "@/components/CurrencySwap";
 
 export default function Sell() {
   const router = useRouter();
+
+  const [wallet, setWallet] = useState<{ asset: string; free: number }[]>([]);
+  const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [currencies, setCurrencies] = useState<any>({});
+
+  useEffect(() => {
+    fetch("/api/user/wallet")
+      .then((response) => response.json())
+      .then((response) => setWallet(response.balances));
+  }, []);
+
+  useEffect(() => {
+    if (!wallet.length) return;
+
+    fetch(
+      `/api/currency?symbol=${wallet
+        .map((currency) => currency.asset)
+        .join(",")}`
+    )
+      .then((response) => response.json())
+      .then((response) => setCurrencies(response.data));
+  }, [wallet]);
 
   const [phase, setPhase] = useState(0);
 
@@ -30,7 +54,11 @@ export default function Sell() {
         <div className="row py-5">
           <div className="col-3 pe-5">
             <div className="mb-1">
-              <Button variant="white">
+              <Button
+                variant="white"
+                className="py-2 w-100 text-start"
+                onClick={() => router.push("/wallet")}
+              >
                 <span className="text-black fw-semibold">Overview</span>
               </Button>
             </div>
@@ -90,15 +118,115 @@ export default function Sell() {
               </div>
               <div className={`progress-${phase}`}>
                 <div className="phase-0">
-                  <button onClick={() => setPhase(1)}>_PROCEED_</button>
+                  <Image
+                    src={imageSell7}
+                    alt="Search"
+                    width={904}
+                    height={192}
+                  />
+                  <div className="sell-wallet-table mt-5">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th className="text-secondary">#</th>
+                          <th className="text-secondary"></th>
+                          <th className="text-secondary">Name</th>
+                          <th className="text-secondary text-end">Price</th>
+                          <th
+                            className="text-secondary text-end"
+                            style={{ width: "15rem" }}
+                          >
+                            24%
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {wallet.map(({ asset, free }, index) => (
+                          <tr
+                            key={index}
+                            onClick={() => {
+                              setSymbol(asset);
+                              setPhase(1);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <td>{index}</td>
+                            <td>
+                              <Image
+                                src={`https://raw.githubusercontent.com/reddavis/Crypto-Icons-API/refs/heads/master/public/svg/icon/${(
+                                  asset as string
+                                ).toLowerCase()}.svg`}
+                                alt="Logo"
+                                width={32}
+                                height={32}
+                              />
+                            </td>
+                            <td>
+                              <h5>{asset}</h5>
+                              {currencies[asset] && (
+                                <span className="text-secondary">
+                                  {currencies[asset].name}
+                                </span>
+                              )}
+                            </td>
+                            <td className="text-end">
+                              <h5>{free}</h5>
+                              {currencies[asset] && (
+                                <p className="small">
+                                  $
+                                  {(
+                                    currencies[asset].quote.USDT.price + 0.0
+                                  ).toFixed(2)}
+                                </p>
+                              )}
+                            </td>
+                            <td className="text-end">
+                              {currencies[asset] && (
+                                <span
+                                  className={`text-${
+                                    currencies[asset].quote.USDT
+                                      .percent_change_24h >= 0
+                                      ? "success"
+                                      : "danger"
+                                  }`}
+                                >
+                                  {(
+                                    currencies[asset].quote.USDT
+                                      .percent_change_24h || 0
+                                  ).toFixed(2)}
+                                  %
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <div className="phase-1">
-                  <CurrencySwap sell onContinue={() => setPhase(2)} />
+                  <CurrencySwap
+                    symbol={symbol}
+                    sell
+                    onContinue={(value: number) => {
+                      setQuantity(value);
+                      setPhase(2);
+                    }}
+                  />
                 </div>
                 <div className="phase-2">
                   <Image
                     style={{ cursor: "pointer" }}
-                    onClick={() => setPhase(3)}
+                    onClick={() =>
+                      fetch("/api/user/sell", {
+                        method: "POST",
+                        body: JSON.stringify({ symbol, quantity }),
+                      })
+                        .then(() => setPhase(3))
+                        .catch(() =>
+                          alert("Something went wrong, please try again.")
+                        )
+                    }
                     src={imageSell5}
                     alt="Confirm"
                     width={989}
@@ -108,7 +236,7 @@ export default function Sell() {
                 <div className="phase-3">
                   <Image
                     style={{ cursor: "pointer" }}
-                    onClick={() => {}}
+                    onClick={() => router.push("/wallet")}
                     src={imageSell6}
                     alt="Complete"
                     width={990}

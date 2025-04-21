@@ -97,3 +97,18 @@ main {
     }
   }
 }
+
+//* ************************************************** *\\
+
+.sell-wallet-table {
+  max-height: 50rem;
+  overflow-y: scroll;
+
+  table {
+    vertical-align: middle;
+
+    p {
+      margin-bottom: 0 !important;
+    }
+  }
+}
