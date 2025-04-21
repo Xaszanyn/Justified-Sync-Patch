@@ -22,6 +22,9 @@ export default function Buy() {
 
   const [phase, setPhase] = useState(0);
 
+  const [quantity, setQuantity] = useState(0);
+  const [symbol, setSymbol] = useState("");
+
   return (
     <main>
       <Breadcrumb title="Buy Crypto" />
@@ -86,12 +89,33 @@ export default function Buy() {
               </div>
               <div className={`progress-${phase}`}>
                 <div className="phase-0">
-                  <CurrencySwap onContinue={() => setPhase(1)} />
+                  <CurrencySwap
+                    onContinue={({
+                      value,
+                      symbol,
+                    }: {
+                      value: number;
+                      symbol: string;
+                    }) => {
+                      setQuantity(value);
+                      setSymbol(symbol);
+                      setPhase(1);
+                    }}
+                  />
                 </div>
                 <div className="phase-1">
                   <Image
                     style={{ cursor: "pointer" }}
-                    onClick={() => setPhase(2)}
+                    onClick={() =>
+                      fetch("/api/user/buy", {
+                        method: "POST",
+                        body: JSON.stringify({ symbol, quantity }),
+                      })
+                        .then(() => setPhase(2))
+                        .catch(() =>
+                          alert("Something went wrong, please try again.")
+                        )
+                    }
                     src={imageBuy4}
                     alt="Confirm"
                     width={811}
@@ -101,7 +125,7 @@ export default function Buy() {
                 <div className="phase-2">
                   <Image
                     style={{ cursor: "pointer" }}
-                    onClick={() => {}}
+                    onClick={() => router.push("/wallet")}
                     src={imageBuy5}
                     alt="Complete"
                     width={810}

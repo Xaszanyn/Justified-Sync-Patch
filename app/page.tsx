@@ -9,73 +9,6 @@ import MarketUpdate from "@/components/home/MarketUpdate";
 import Marquee from "@/components/Marquee";
 
 export default function Home() {
-  const mockMarketUpdate = [
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-    {
-      name: "Bitcoin",
-      code: "BTC",
-      image: "/btc.png",
-      last_price: 56623.54,
-      percentage: 1.45,
-      market_cap: 880423640582,
-    },
-  ];
-
   return (
     <main>
       <Container className="bg-tertiary py-5 header position-relative dark-black">
@@ -105,7 +38,7 @@ export default function Home() {
             See All Coins
           </span>
         </h2>
-        <MarketUpdate data={mockMarketUpdate} />
+        <MarketUpdate />
       </Container>
       <Container className="bg-tertiary py-5 dark-black">
         <h2 className="text-center mb-3">How It Work</h2>

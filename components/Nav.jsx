@@ -74,17 +74,17 @@ export default function Nav() {
               </Link>
             </li>
             <li className="nav-item fw-semibold">
-              <Link className="nav-link center px-3" href="/DDDDDDDDDD">
+              <Link className="nav-link center px-3" href="/exchange">
                 Exchange
               </Link>
             </li>
             <li className="nav-item fw-semibold">
-              <Link className="nav-link center px-3" href="/DDDDDDDDDD">
+              <Link className="nav-link center px-3" href="/exchange">
                 Spot
               </Link>
             </li>
             <li className="nav-item fw-semibold">
-              <Link className="nav-link center px-3" href="/DDDDDDDDDD">
+              <Link className="nav-link center px-3" href="/exchange">
                 BITUSDT
                 <Image
                   src="/fire.png"
